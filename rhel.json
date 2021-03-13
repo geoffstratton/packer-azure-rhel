@@ -1,0 +1,36 @@
+{
+   "builders": [{
+     "type": "azure-arm",
+
+     "client_id": "",
+     "client_secret": "xx-xxxxxxxxxxxxxxxxxxxxxxxxxx.xxxx",
+     "tenant_id": "",
+     "subscription_id": "",
+
+     "managed_image_resource_group_name": "PackerDemo",
+     "managed_image_name": "packer-rhel8",
+
+     "os_type": "Linux",
+     "image_publisher": "RedHat",
+     "image_offer": "RHEL",
+     "image_sku": "8.2",
+
+     "azure_tags": {
+         "type": "Packer Build",
+         "task": "Image deployment"
+     },
+
+     "location": "West US",
+     "vm_size": "Standard_B1S"
+   }],
+   "provisioners": [{
+     "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+     "inline": [
+       "dnf upgrade -y",
+
+       "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+     ],
+     "inline_shebang": "/bin/sh -x",
+     "type": "shell"
+   }]
+}
